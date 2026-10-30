@@ -1,13 +1,11 @@
 ﻿# Dolce Vita Salon and Spa
 
-A full-stack salon appointment and operations system with a React/Vite client, Node.js/Express API, and MariaDB database.
+A salon appointment and operations system with a React/Vite client and Supabase backend (PostgreSQL, Auth, Storage, and Row Level Security).
 
 ## Technology
 
 - React 18 and Vite 6
-- Node.js and Express
-- MariaDB
-- JWT authentication and bcrypt password hashing
+- Supabase PostgreSQL, Auth, Storage, and Row Level Security
 - Bootstrap 5 and Bootstrap Icons
 
 ## Local setup
@@ -19,29 +17,17 @@ npm install
 npm run dev
 ```
 
-### 2. Database and API
+### 2. Supabase backend
 
-1. Start MariaDB through XAMPP, MariaDB, or your preferred local database installation.
-2. Copy `backend/.env.example` to `backend/.env`.
-3. Set your MariaDB credentials and replace `JWT_SECRET` with a long random value.
-4. Install the API dependencies, create the database and tables, seed its starter data, then start the API:
+1. Copy `.env.example` to `.env.local` and provide your Supabase URL and publishable key.
+2. Run `supabase/migrations/20261030_dolce_vita.sql` in Supabase Dashboard → SQL Editor.
+3. Follow `supabase/README.md` to configure authentication and create your first administrator.
 
-```bash
-cd backend
-npm install
-npm run seed
-npm run dev
-```
-
-The API runs at `http://localhost:3001`. During development, Vite proxies `/api` and `/uploads` to the API.
+`npm run dev` now starts only Vite because Supabase is the hosted backend. `npm run dev:legacy` retains the old Express/MariaDB local stack.
 
 ## Demo accounts
 
-`npm run seed` creates `dolcevia_db`, creates the MariaDB tables, adds the service catalogue, and creates the following accounts. All use password `password`.
-
-- `admin@dolcevia.test` - Administrator / Owner
-- `staff@dolcevia.test` - Order / Business Personnel
-- `customer@dolcevia.test` - Customer
+Register your first account through the application, then promote it to `admin` in the Supabase `profiles` table as described in `supabase/README.md`.
 
 ## Application features
 
@@ -60,18 +46,16 @@ The API runs at `http://localhost:3001`. During development, Vite proxies `/api`
 ```text
 src/
   main.jsx        React views, role-aware routing, and API-backed store
-  api.js           API client and token handling
-backend/
-  src/             Express server, authentication, MariaDB queries, and seed script
-  sql/schema.sql   MariaDB schema
-  .env.example     API/database environment template
+  api.js           Supabase data and authentication adapter
+  supabase.js      Supabase browser client
+supabase/
+  migrations/      PostgreSQL schema, RLS policies, RPCs, storage, and catalogue seed
 public/
   service-photos/  Service image library
 ```
 
 ## Security notes
 
-- Never put MariaDB credentials in React source code or Vite environment variables.
-- Keep `backend/.env` private; it is excluded from Git.
-- The Express API enforces role permissions. Frontend route checks are only a user-interface convenience.
-- For production, use HTTPS and move the JWT from browser storage to secure HTTP-only cookies.
+- Never put a Supabase secret key, service-role key, or database password in React or Vercel variables.
+- Keep `.env.local` private; it is excluded from Git.
+- Supabase RLS policies and database functions enforce role permissions. Frontend route checks are only a user-interface convenience.
