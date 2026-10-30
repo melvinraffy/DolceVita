@@ -23,7 +23,7 @@ npm run dev
 2. Run `supabase/migrations/20261030_dolce_vita.sql` in Supabase Dashboard → SQL Editor.
 3. Follow `supabase/README.md` to configure authentication and create your first administrator.
 
-`npm run dev` now starts only Vite because Supabase is the hosted backend. `npm run dev:legacy` retains the old Express/MariaDB local stack.
+`npm run dev` starts the Vite frontend. Supabase is the hosted backend, so no local API or database server is required.
 
 ## Demo accounts
 
@@ -39,7 +39,7 @@ Register your first account through the application, then promote it to `admin` 
 - Customer appointment requests, appointment receipt, and support conversations
 - Staff operations dashboard, appointment queue, and inquiry handling
 - Administrator staff approval, service catalogue management, appointment records, sales records, and analytics views
-- Service image uploads stored by the Express API
+- Service image uploads stored in Supabase Storage
 
 ## Project structure
 
