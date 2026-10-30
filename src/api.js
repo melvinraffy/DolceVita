@@ -55,7 +55,10 @@ export async function apiRegister(details) {
   if (password !== password_confirmation || password.length < 8) throw new Error('Passwords must match and contain at least 8 characters.');
   const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { first_name, last_name, phone_number, address, account_type } } });
   fail(error);
-  if (account_type === 'staff') return { message: 'Staff registration submitted. An administrator must approve the account before sign-in.' };
+  if (account_type === 'staff') {
+    await supabase.auth.signOut();
+    return { message: 'Staff registration submitted. An administrator must approve the account before sign-in.' };
+  }
   if (!data.session) return { message: 'Account created. Check your email to confirm your account, then sign in.' };
   const { data: profile, error: profileError } = await supabase.from('profiles').select('*').eq('id', data.user.id).single();
   fail(profileError);
