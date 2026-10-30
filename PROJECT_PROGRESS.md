@@ -1,24 +1,40 @@
-﻿# Dolce Vita Salon and Spa — Project Status
+# Dolce Vita Salon and Spa - Project Status
 
 ## Current implementation
 
-This repository contains a React/Vite front-end prototype for a salon appointment and operations system. It uses browser `localStorage` to demonstrate application data, authentication state, role access, appointments, support inquiries, sales records, and service management.
+The project now includes a React/Vite frontend, a Node.js/Express REST API, and a MariaDB schema/seed script. The role-based interface is being migrated from browser-only demonstration state to API-backed data.
 
-## Completed
+## Completed backend foundation
 
-- Public landing page and service catalogue
-- Service detail pages with pricing, duration, and images
-- Customer, staff, and administrator role-based navigation and route protection
-- Customer and staff registration flows
-- Administrator approval flow for staff registrations
-- Customer appointment booking, appointment history, and printable receipt
-- Customer support conversation workspace
-- Staff operations dashboard, analytics, appointment queue, and inquiry workspace
-- Administrator business dashboard, analytics, sales records, appointment records, service catalogue, inquiry records, and staff approval list
-- 47 service images placed in `public/service-photos/`
-- Production build verified with `npm run build`
+- Express API under `backend/`
+- MariaDB schema for users, service categories, services, appointments, appointment items, appointment history, sales, inquiries, and inquiry messages
+- Bcrypt password hashing, JWT authentication, and server-side Customer, Staff, and Administrator authorization
+- Customer/staff registration with administrator approval requirement for staff accounts
+- Public catalogue and role-aware bootstrap endpoints
+- Appointment creation with backend availability validation
+- Staff appointment status processing and sales recording
+- Customer and staff inquiry messaging endpoints
+- Administrator staff approval, sales/appointment/inquiry records, and service management with image uploads
+- MariaDB seed script with the service catalogue and three demo accounts
 
-## Important limitation
+## Frontend integration completed
 
-The project is a client-side demonstration. It does not currently connect to an API, database, payment gateway, or production authentication provider. Resetting browser storage resets the demonstration data.
+- API-backed catalogue loading
+- API-backed sign-in, registration, token session restoration, and role-aware bootstrap loading
+- API-backed customer appointment submission
+- API-backed administrator service creation/editing and staff approval
+
+## Local validation
+
+- Backend JavaScript syntax validation passed
+- Frontend production build passed
+
+## Required local setup
+
+1. Start MariaDB.
+2. Copy `backend/.env.example` to `backend/.env` and enter database credentials plus a secure JWT secret.
+3. Run `cd backend`, `npm install`, `npm run seed`, and `npm run dev`.
+4. Run `npm run dev` from the repository root for the frontend.
+
+MariaDB was not available through the command line in this workspace, so live database creation and seeding must be performed after MariaDB is started locally.
 

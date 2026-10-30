@@ -26,3 +26,6 @@ validation-*.log
 /.nova
 /.vscode
 /.zed
+/backend/node_modules
+/backend/.env
+/backend/uploads

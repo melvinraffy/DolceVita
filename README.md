@@ -1,70 +1,77 @@
 ﻿# Dolce Vita Salon and Spa
 
-A React single-page prototype for Dolce Vita Salon and Spa. It provides a public service catalogue, role-based workspaces, appointment-request flow, customer support conversations, and service management views.
+A full-stack salon appointment and operations system with a React/Vite client, Node.js/Express API, and MariaDB database.
 
 ## Technology
 
-- React 18
-- Vite 6
-- Bootstrap 5 and Bootstrap Icons loaded from the application HTML
-- Browser `localStorage` for demonstration data and session state
+- React 18 and Vite 6
+- Node.js and Express
+- MariaDB
+- JWT authentication and bcrypt password hashing
+- Bootstrap 5 and Bootstrap Icons
 
-## Run locally
+## Local setup
 
-### Prerequisites
-
-- Node.js 18 or later
-- npm
-
-### Installation
+### 1. Frontend
 
 ```bash
 npm install
 npm run dev
 ```
 
-Vite will display the local development URL in the terminal.
+### 2. Database and API
 
-### Production build
+1. Start MariaDB through XAMPP, MariaDB, or your preferred local database installation.
+2. Copy `backend/.env.example` to `backend/.env`.
+3. Set your MariaDB credentials and replace `JWT_SECRET` with a long random value.
+4. Install the API dependencies, create the database and tables, seed its starter data, then start the API:
 
 ```bash
-npm run build
-npm run preview
+cd backend
+npm install
+npm run seed
+npm run dev
 ```
+
+The API runs at `http://localhost:3001`. During development, Vite proxies `/api` and `/uploads` to the API.
+
+## Demo accounts
+
+`npm run seed` creates `dolcevia_db`, creates the MariaDB tables, adds the service catalogue, and creates the following accounts. All use password `password`.
+
+- `admin@dolcevia.test` - Administrator / Owner
+- `staff@dolcevia.test` - Order / Business Personnel
+- `customer@dolcevia.test` - Customer
 
 ## Application features
 
 - Public landing page and service catalogue
-- Individual service details with prices, durations, and service images
-- Customer registration and sign-in
-- Staff registration with administrator approval requirement
-- Role-based redirects and protected pages for three user roles:
-  - **Customer** — personal overview, appointment booking, appointment receipts, and support conversations
-  - **Order / Business Personnel** — operations dashboard, workload analytics, appointment queue, and inquiry handling
-  - **Administrator / Owner** — business overview, owner analytics, sales records, appointment records, service catalogue management, inquiry records, and staff approval
-- Appointment request flow with selected services, date/time selection, estimated price, and printable receipt
-- Service image library in `public/service-photos/`
-
-## Demo data
-
-This project stores its demonstration users, services, appointments, sales, and inquiries in browser `localStorage`. Data is specific to the browser profile in which the application runs.
-
-To reset the demo data, clear the site storage in your browser's developer tools, then reload the app.
+- Individual service details with prices, durations, and images
+- Customer and staff registration
+- Secure sign-in with role-aware redirects
+- Role-based access control for Customer, Staff, and Administrator roles
+- Customer appointment requests, appointment receipt, and support conversations
+- Staff operations dashboard, appointment queue, and inquiry handling
+- Administrator staff approval, service catalogue management, appointment records, sales records, and analytics views
+- Service image uploads stored by the Express API
 
 ## Project structure
 
 ```text
 src/
-  main.jsx        Application routes, role access, views, and demo data
-  app.css         Application-specific styles
+  main.jsx        React views, role-aware routing, and API-backed store
+  api.js           API client and token handling
+backend/
+  src/             Express server, authentication, MariaDB queries, and seed script
+  sql/schema.sql   MariaDB schema
+  .env.example     API/database environment template
 public/
-  css/            Shared interface styles
-  service-photos/ Service images used by the catalogue
-index.html         Vite entry page and external style links
+  service-photos/  Service image library
 ```
 
-## Notes
+## Security notes
 
-- This is a front-end demonstration application; it does not include a server, database, or production authentication system.
-- Service photographs are illustrative assets supplied for the project and are not photographs of Dolce Vita Salon itself.
-
+- Never put MariaDB credentials in React source code or Vite environment variables.
+- Keep `backend/.env` private; it is excluded from Git.
+- The Express API enforces role permissions. Frontend route checks are only a user-interface convenience.
+- For production, use HTTPS and move the JWT from browser storage to secure HTTP-only cookies.
