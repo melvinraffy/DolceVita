@@ -29,8 +29,8 @@ export async function apiCatalogue() {
 }
 
 export async function apiBootstrap() {
-  const { data: { user }, error: sessionError } = await supabase.auth.getUser();
-  if (sessionError || !user) return apiCatalogue();
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return apiCatalogue();
   return rpc('app_bootstrap');
 }
 
