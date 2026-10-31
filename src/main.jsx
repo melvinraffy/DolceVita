@@ -19,6 +19,20 @@ const serviceSeed = [
  ['Waxing Services','Eyebrow Waxing','Eyebrow waxing service.',200,20],['Waxing Services','Underarm Waxing','Underarm waxing service.',250,30],['Waxing Services','Brazilian Waxing','Brazilian waxing service.',500,60],['Massage Services','Shiatsu Massage','Shiatsu massage service.',350,60],['Massage Services','Swedish Massage','Swedish massage service.',350,60],['Massage Services','Hot Stone','Hot stone massage service.',500,60],['Eyelash & Eyebrow Services','Korean Eyelash Lift','Korean eyelash lift service.',500,60],['Eyelash & Eyebrow Services','Eyelash Extension','Starting price; final price varies by selected style.',500,120],['Eyelash & Eyebrow Services','Eyebrow Threading','Eyebrow threading service.',150,20]
 ];
 const emptyData = () => ({users:[],categories:[],services:[],appointments:[],inquiries:[],sales:[]});
+const asArray = value => Array.isArray(value) ? value : [];
+const normaliseBootstrapData = result => {
+  const payload = result && typeof result === 'object' ? result : {};
+  return {
+    ...emptyData(),
+    ...payload,
+    users: asArray(payload.users),
+    categories: asArray(payload.categories),
+    services: asArray(payload.services),
+    appointments: asArray(payload.appointments),
+    inquiries: asArray(payload.inquiries),
+    sales: asArray(payload.sales),
+  };
+};
 const Store = createContext(null); const useStore=()=>useContext(Store);
 class AppErrorBoundary extends Component {
   constructor(props) { super(props); this.state = { error: false }; }
@@ -41,7 +55,7 @@ function App(){
   const [menu,setMenu]=useState(false);
   const go=(path)=>{const next=path||'/';if(location.hash!==`#${next}`)location.hash=next;setRoute(next)};
   const refresh=async()=>{
-    try { const result=await apiBootstrap(); setData({...emptyData(),...result}); setUser(result.user||null); }
+    try { const result=await apiBootstrap(); setData(normaliseBootstrapData(result)); setUser(result?.user||null); }
     catch(error){ setUser(null); setData(emptyData()); }
   };
   const startSession=async(result)=>{setUser(result.user);await refresh();};
