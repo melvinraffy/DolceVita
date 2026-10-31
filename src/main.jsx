@@ -35,10 +35,11 @@ const normaliseBootstrapData = result => {
 };
 const Store = createContext(null); const useStore=()=>useContext(Store);
 class AppErrorBoundary extends Component {
-  constructor(props) { super(props); this.state = { error: false }; }
-  static getDerivedStateFromError() { return { error: true }; }
+  constructor(props) { super(props); this.state = { error: false, message: '' }; }
+  static getDerivedStateFromError(error) { return { error: true, message: error?.message || 'An unexpected application error occurred.' }; }
+  componentDidCatch(error, info) { console.error('Dolce Vita page error:', error, info); }
   render() {
-    if (this.state.error) return <main className="section-padding"><div className="container"><div className="receipt-card mx-auto text-center"><i className="bi bi-exclamation-triangle-fill fs-1 text-warning"/><h1 className="auth-title mt-3">We could not load this page</h1><p className="text-muted">Please refresh the page or sign in again.</p><button className="btn btn-dv" onClick={()=>{this.props.reset();this.setState({error:false})}}>Return to home</button></div></div></main>;
+    if (this.state.error) return <main className="section-padding"><div className="container"><div className="receipt-card mx-auto text-center"><i className="bi bi-exclamation-triangle-fill fs-1 text-warning"/><h1 className="auth-title mt-3">We could not load this page</h1><p className="text-muted">Please refresh the page or sign in again.</p><div className="alert alert-light text-start small mx-auto" style={{maxWidth:'42rem'}}><strong>Technical detail:</strong> {this.state.message}</div><button className="btn btn-dv" onClick={()=>{this.props.reset();this.setState({error:false,message:''})}}>Return to home</button></div></div></main>;
     return this.props.children;
   }
 }
