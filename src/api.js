@@ -41,7 +41,7 @@ export async function apiLogin({ email, password, account_type }) {
   fail(profileError);
   if (profile.status !== 'active') {
     await supabase.auth.signOut();
-    throw new Error('Your staff account is awaiting administrator approval.');
+    throw new Error(profile.status === 'inactive' ? 'Your staff registration was not approved. Please contact the salon administrator.' : 'Your staff account is awaiting administrator approval.');
   }
   if ((account_type === 'customer' && profile.role !== 'customer') || (account_type === 'staff' && !['staff', 'admin'].includes(profile.role))) {
     await supabase.auth.signOut();
@@ -74,6 +74,7 @@ export const apiCustomerMessage = (id, message) => rpc('customer_inquiry_message
 export const apiStaffAppointmentStatus = (id, details) => rpc('staff_update_appointment', { appointment: id, update_data: details });
 export const apiStaffInquiryMessage = (id, message, status) => rpc('staff_inquiry_message', { inquiry: id, body: message, next_status: status || 'responded' });
 export const apiApproveStaff = (id) => rpc('approve_staff', { staff_id: id });
+export const apiRejectStaff = (id) => rpc('reject_staff', { staff_id: id });
 
 export async function apiCreateCategory(name) {
   const { data, error } = await supabase.from('service_categories').insert({ name }).select().single();
