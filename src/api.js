@@ -51,14 +51,18 @@ export async function apiLogin({ email, password, account_type }) {
 }
 
 export async function apiRequestPasswordReset(email) {
-  const redirectTo = `${window.location.origin}${window.location.pathname}?recovery=1`;
-  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo });
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim());
   fail(error, 'We could not send the password reset email. Please try again.');
+}
+
+export async function apiVerifyPasswordResetOtp(email, token) {
+  const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: token.trim(), type: 'recovery' });
+  fail(error, 'That verification code is invalid or has expired. Request a new code and try again.');
 }
 
 export async function apiUpdatePassword(password) {
   const { error } = await supabase.auth.updateUser({ password });
-  fail(error, 'We could not update your password. Please request a new reset link and try again.');
+  fail(error, 'We could not update your password. Please request a new code and try again.');
 }
 
 export async function apiRegister(details) {
