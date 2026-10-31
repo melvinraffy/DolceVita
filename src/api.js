@@ -50,6 +50,17 @@ export async function apiLogin({ email, password, account_type }) {
   return { user: publicUser(profile), redirect: profile.role === 'admin' ? '/admin' : profile.role === 'staff' ? '/staff' : '/dashboard' };
 }
 
+export async function apiRequestPasswordReset(email) {
+  const redirectTo = `${window.location.origin}${window.location.pathname}?recovery=1`;
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo });
+  fail(error, 'We could not send the password reset email. Please try again.');
+}
+
+export async function apiUpdatePassword(password) {
+  const { error } = await supabase.auth.updateUser({ password });
+  fail(error, 'We could not update your password. Please request a new reset link and try again.');
+}
+
 export async function apiRegister(details) {
   const { first_name, last_name, email, phone_number, address, password, password_confirmation, account_type } = details;
   if (password !== password_confirmation || password.length < 8) throw new Error('Passwords must match and contain at least 8 characters.');
