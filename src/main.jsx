@@ -44,8 +44,8 @@ class AppErrorBoundary extends Component {
   }
 }
 const money=n=>new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',maximumFractionDigits:2}).format(Number(n||0));
-const dateText=d=>new Intl.DateTimeFormat('en-PH',{month:'short',day:'numeric',year:'numeric'}).format(new Date(`${d}T12:00:00`));
-const timeText=t=>new Intl.DateTimeFormat('en-PH',{hour:'numeric',minute:'2-digit'}).format(new Date(`2000-01-01T${t}:00:00`));
+const dateText=d=>{const value=String(d??'').slice(0,10);if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return 'Date unavailable';const date=new Date(`${value}T12:00:00`);return Number.isNaN(date.getTime())?'Date unavailable':new Intl.DateTimeFormat('en-PH',{month:'short',day:'numeric',year:'numeric'}).format(date)};
+const timeText=t=>{const match=String(t??'').match(/(?:T|^)(\d{1,2}):(\d{2})/);if(!match)return 'Time unavailable';const hour=Number(match[1]),minute=Number(match[2]);if(hour>23||minute>59)return 'Time unavailable';return `${hour%12||12}:${String(minute).padStart(2,'0')} ${hour<12?'AM':'PM'}`};
 const now=()=>new Date().toISOString(); const idFor=(items)=>Math.max(0,...items.map(x=>x.id||0))+1;
 const variable=s=>/price varies|starting price/i.test(s.description||'');
 function App(){
