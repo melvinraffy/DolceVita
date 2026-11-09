@@ -103,6 +103,12 @@ export async function apiDeleteCategories(ids) {
   fail(error, 'The selected categories could not be removed. Remove their services first.');
 }
 
+export async function apiUpdateCategory(id, name) {
+  const { data, error } = await supabase.from('service_categories').update({ name: name.trim() }).eq('id', id).select().single();
+  fail(error, 'The category could not be updated.');
+  return data;
+}
+
 export async function apiSaveService(service) {
   let categoryId = Number(service.category_id);
   const newCategory = service.new_category?.trim();
