@@ -94,6 +94,12 @@ export async function apiCreateCategory(name) {
 }
 
 export async function apiSaveService(service) {
+  let categoryId = Number(service.category_id);
+  const newCategory = service.new_category?.trim();
+  if (newCategory) {
+    const category = await apiCreateCategory(newCategory);
+    categoryId = category.id;
+  }
   let image = typeof service.image === 'string' ? service.image : null;
   if (service.image instanceof File) {
     const extension = service.image.name.split('.').pop()?.replace(/[^a-z0-9]/gi, '') || 'jpg';
@@ -103,7 +109,7 @@ export async function apiSaveService(service) {
     const { data } = supabase.storage.from('service-images').getPublicUrl(path);
     image = data.publicUrl;
   }
-  const payload = { category_id: Number(service.category_id), name: service.name?.trim(), description: service.description?.trim(), price: Number(service.price), duration_minutes: Number(service.duration_minutes), is_active: Boolean(service.is_active), is_available: Boolean(service.is_available), ...(image ? { image } : {}) };
+  const payload = { category_id: categoryId, name: service.name?.trim(), description: service.description?.trim(), price: Number(service.price), duration_minutes: Number(service.duration_minutes), is_active: Boolean(service.is_active), is_available: Boolean(service.is_available), ...(image ? { image } : {}) };
   const query = service.id ? supabase.from('services').update(payload).eq('id', service.id).select().single() : supabase.from('services').insert(payload).select().single();
   const { data, error } = await query;
   fail(error);
