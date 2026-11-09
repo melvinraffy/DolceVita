@@ -93,6 +93,16 @@ export async function apiCreateCategory(name) {
   return data;
 }
 
+export async function apiDeleteServices(ids) {
+  const { error } = await supabase.from('services').delete().in('id', ids);
+  fail(error, 'The selected services could not be removed. Services used by an appointment cannot be removed.');
+}
+
+export async function apiDeleteCategories(ids) {
+  const { error } = await supabase.from('service_categories').delete().in('id', ids);
+  fail(error, 'The selected categories could not be removed. Remove their services first.');
+}
+
 export async function apiSaveService(service) {
   let categoryId = Number(service.category_id);
   const newCategory = service.new_category?.trim();
