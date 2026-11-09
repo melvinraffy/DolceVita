@@ -188,6 +188,7 @@ function AdminServices(){
   return <div className="dv-react-modal"><div className="dv-react-modal-card"><div className="dv-react-modal-head"><h2 className="fs-4 mb-0">Add category</h2><button className="btn-close" onClick={onClose}/></div><form className="dv-react-modal-body" onSubmit={event=>{event.preventDefault();onSave(name)}}><div className="mb-4"><label className="form-label">Category name</label><input className="form-control" autoFocus required value={name} onChange={event=>setName(event.target.value)} placeholder="Enter a category name"/></div><div className="d-flex justify-content-end gap-2"><button type="button" className="btn btn-outline-dv" onClick={onClose}>Cancel</button><button className="btn btn-dv">Add Category</button></div></form></div></div>
 }
 function ServiceModal({ service, categories, onSave, onClose }) {
+  const [addingNewCategory, setAddingNewCategory] = useState(false);
   const [form, setForm] = useState({
     id: service.id,
     category_id: service.category_id || categories[0]?.id || '',
@@ -205,7 +206,7 @@ function ServiceModal({ service, categories, onSave, onClose }) {
   return <div className="dv-react-modal"><div className="dv-react-modal-card">
     <div className="dv-react-modal-head"><h2 className="fs-4 mb-0">{service.id ? 'Edit service' : 'Add service'}</h2><button className="btn-close" onClick={onClose} /></div>
     <form className="dv-react-modal-body" onSubmit={event => { event.preventDefault(); onSave(form); }}>
-      <div className="mb-3"><label className="form-label">Category</label><select className="form-select" required value={form.category_id} onChange={event => setForm({ ...form, category_id: event.target.value })}>{categories.map(category => <option value={category.id} key={category.id}>{category.name}</option>)}</select></div>
+      <div className="mb-3"><div className="d-flex justify-content-between align-items-center mb-1"><label className="form-label mb-0">Category</label>{!service.id&&<button type="button" className="btn btn-link btn-sm p-0" onClick={()=>{setAddingNewCategory(current=>!current);setForm(current=>({...current,new_category:''}))}}>{addingNewCategory?'Choose existing category':'Add New Category'}</button>}</div>{addingNewCategory?<input className="form-control" required value={form.new_category} onChange={event=>setForm({...form,new_category:event.target.value})} placeholder="Enter a new category name"/>:<select className="form-select" required value={form.category_id} onChange={event => setForm({ ...form, category_id: event.target.value })}>{categories.map(category => <option value={category.id} key={category.id}>{category.name}</option>)}</select>}</div>
       <Field label="Service name" value={form.name} onChange={value => setForm({ ...form, name: value })} />
       <div className="mb-3"><label className="form-label">Description</label><textarea className="form-control" rows="3" value={form.description} onChange={event => setForm({ ...form, description: event.target.value })} /></div>
       <div className="row"><Field col="col-md-6" label="Price" type="number" value={form.price} onChange={value => setForm({ ...form, price: value })} /><Field col="col-md-6" label="Duration (minutes)" type="number" value={form.duration_minutes} onChange={value => setForm({ ...form, duration_minutes: value })} /></div>
