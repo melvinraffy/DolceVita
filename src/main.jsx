@@ -4,7 +4,7 @@ import { apiApproveStaff, apiBootstrap, apiCatalogue, apiCreateAppointment, apiC
 import { supabase } from './supabase.js';
 
 const TIMES = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
-function useLatestMessageScroll(ref,key){useEffect(()=>{const panel=ref.current;if(!panel)return;const frame=requestAnimationFrame(()=>{panel.scrollTop=panel.scrollHeight});return()=>cancelAnimationFrame(frame)},[key])}
+function useLatestMessageScroll(ref,key){useEffect(()=>{const panel=ref.current;if(!panel)return;const scrollToLatest=()=>{panel.scrollTop=panel.scrollHeight};scrollToLatest();const frame=requestAnimationFrame(scrollToLatest);const timer=setTimeout(scrollToLatest,80);return()=>{cancelAnimationFrame(frame);clearTimeout(timer)}},[key])}
 const FALLBACK_IMAGE = '/service-photos/01_Haircut.jpg';
 const serviceImages = {
   'Haircut':'01_Haircut.jpg', 'Blowdry w/ Shampoo':'02_Blowdry_with_Shampoo.jpg', 'Hair Iron':'03_Hair_Iron.jpg', 'Hair Rebond':'04_Hair_Reborn.jpg', 'Collagen Hairmask':'05_Collagen_Hairmask.jpg', 'Hair Color':'14_Hair_Color.jpg', 'Balayage / Ombre':'17_Bayalage_Ombre.jpg',
