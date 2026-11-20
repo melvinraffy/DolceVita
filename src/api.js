@@ -82,6 +82,8 @@ export const apiCreateAppointment = async (details) => {
 };
 export const apiCreateInquiry = (message) => rpc('create_inquiry', { body: message, critical: true });
 export const apiCustomerMessage = (id, message) => rpc('customer_inquiry_message', { inquiry: id, body: message });
+export const apiCustomerInquiryTemplateOptions = () => rpc('customer_inquiry_template_options');
+export const apiCustomerSendInquiryTemplate = (templateId, inquiryId) => rpc('customer_send_inquiry_template', { template_id: templateId, inquiry: inquiryId || null });
 export const apiStaffAppointmentStatus = (id, details) => rpc('staff_update_appointment', { appointment: id, update_data: details });
 export const apiCreateWalkInSale = (details) => rpc('create_walk_in_sale', { request: details });
 export const apiStaffInquiryMessage = (id, message, status) => rpc('staff_inquiry_message', { inquiry: id, body: message, next_status: status || 'responded' });
