@@ -88,6 +88,22 @@ export const apiStaffInquiryMessage = (id, message, status) => rpc('staff_inquir
 export const apiApproveStaff = (id) => rpc('approve_staff', { staff_id: id });
 export const apiRejectStaff = (id) => rpc('reject_staff', { staff_id: id });
 
+export async function apiInquiryResponseTemplates() {
+  const { data, error } = await supabase.from('inquiry_response_templates').select('*').order('title');
+  fail(error, 'The reply templates could not be loaded.');
+  return data || [];
+}
+
+export async function apiSaveInquiryResponseTemplate(template) {
+  const payload = { title: template.title.trim(), body: template.body.trim() };
+  const query = template.id
+    ? supabase.from('inquiry_response_templates').update(payload).eq('id', template.id).select().single()
+    : supabase.from('inquiry_response_templates').insert(payload).select().single();
+  const { data, error } = await query;
+  fail(error, 'The reply template could not be saved.');
+  return { ...data, message: template.id ? 'Reply template updated.' : 'Reply template added.' };
+}
+
 export async function apiCreateCategory(name) {
   const { data, error } = await supabase.from('service_categories').insert({ name }).select().single();
   fail(error);
