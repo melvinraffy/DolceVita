@@ -86,7 +86,7 @@ export const apiGuestSupportConversation = (inquiryId, accessToken) => rpc('gues
 export const apiGuestInquiryMessage = (inquiryId, accessToken, message) => rpc('guest_inquiry_message', { inquiry: inquiryId, access_token: accessToken, body: message });
 export const apiCustomerSupportConversation = () => rpc('customer_support_conversation');
 export const apiPublicInquiryTemplateOptions = () => rpc('public_inquiry_template_options');
-export const apiGuestSendInquiryTemplate = (templateId) => rpc('guest_send_inquiry_template', { template_id: templateId });
+export const apiGuestSendInquiryTemplate = (templateId, inquiryId, accessToken) => rpc('guest_send_inquiry_template', { template_id: templateId, inquiry: inquiryId || null, access_token: accessToken || null });
 export const apiCustomerMessage = (id, message) => rpc('customer_inquiry_message', { inquiry: id, body: message });
 export const apiCustomerInquiryTemplateOptions = () => rpc('customer_inquiry_template_options');
 export const apiCustomerSendInquiryTemplate = (templateId, inquiryId) => rpc('customer_send_inquiry_template', { template_id: templateId, inquiry: inquiryId || null });
