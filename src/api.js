@@ -82,6 +82,8 @@ export const apiCreateAppointment = async (details) => {
 };
 export const apiCreateInquiry = (message) => rpc('create_inquiry', { body: message, critical: true });
 export const apiCreateGuestInquiry = (message) => rpc('create_guest_inquiry', { body: message });
+export const apiPublicInquiryTemplateOptions = () => rpc('public_inquiry_template_options');
+export const apiGuestSendInquiryTemplate = (templateId) => rpc('guest_send_inquiry_template', { template_id: templateId });
 export const apiCustomerMessage = (id, message) => rpc('customer_inquiry_message', { inquiry: id, body: message });
 export const apiCustomerInquiryTemplateOptions = () => rpc('customer_inquiry_template_options');
 export const apiCustomerSendInquiryTemplate = (templateId, inquiryId) => rpc('customer_send_inquiry_template', { template_id: templateId, inquiry: inquiryId || null });
